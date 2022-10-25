@@ -7,7 +7,7 @@ const messages = {zh_CN, en_US}
 
 const i18n = createI18n({
     legacy: false,
-    locale: localStorage.getItem("language") || "zh_CN",
+    locale: localStorage.getItem("locale") || "zh_CN",
     fallbackLocale: 'zh_CN',
     messages
 })
