@@ -28,7 +28,8 @@
     "search": "搜索包含以上模组的模组包",
     "download-count": "下载量：",
     "create-time": "创建时间：",
-    "modify-time": "更新时间："
+    "modify-time": "更新时间：",
+    "mods-count": "模组数量："
   },
   "not-found": {
     "title": "404 页面未找到"

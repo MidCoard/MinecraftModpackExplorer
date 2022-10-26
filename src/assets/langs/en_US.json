@@ -28,7 +28,8 @@
     "search": "Search modpacks by mods above",
     "download-count": "Download Count: ",
     "create-time": "Create Time: ",
-    "modify-time": "Update Time: "
+    "modify-time": "Update Time: ",
+    "mods-count": "Mods Count: "
   },
   "not-found": {
     "title": "404 Not Found"

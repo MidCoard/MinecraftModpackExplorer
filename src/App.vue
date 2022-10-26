@@ -1,7 +1,7 @@
 <script setup>
 import FLink from '@/components/FLink.vue'
 import i18n from "@/i18n";
-import {ref, watch} from "vue";
+import {provide, ref, watch} from "vue";
 import {useConstants} from "@/stores/useConstants";
 
 const constants = useConstants()
@@ -11,8 +11,9 @@ let locale = ref(localStorage.getItem('locale') || 'zh_CN')
 watch(locale, (newLocale) => {
   localStorage.setItem('locale', newLocale)
   i18n.global.locale.value = newLocale
-  constants.updateLocale(newLocale)
 })
+
+provide('locale', locale)
 
 let locales = [
   {

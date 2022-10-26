@@ -16,8 +16,8 @@
               {{$t('search.according-to')}}
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-select @input="update" v-model="sortType" :options="sortTypeOptions"></b-form-select>
-          <b-form-select @input="update" v-model="sortBy" :options="sortByOptions"></b-form-select>
+          <b-form-select @input="update" v-model="sortType" :options="sortTypeOptions" :disabled="loadingSearchModpacks"></b-form-select>
+          <b-form-select @input="update" v-model="sortBy" :options="sortByOptions" :disabled="loadingSearchModpacks"></b-form-select>
           <b-input-group-append>
             <b-input-group-text>
               {{$t('search.sort')}}
@@ -37,6 +37,9 @@
                 <b-card-text class="text-secondary mb-0">
                   <p v-show="mod.authors.length !== 0" class="mb-0">
                   {{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}
+                  </p>
+                  <p class="mb-0">
+                    {{$t('home.mods-count')}} {{mod.dependencies.length}}
                   </p>
                   <p class="mb-0">
                     {{$t('home.download-count')}} {{mod.downloadCount}}
@@ -79,7 +82,7 @@
 
 <script setup>
 import axios from "axios";
-import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, inject, onMounted, onUnmounted, ref, watch} from "vue";
 import {useConstants} from "@/stores/useConstants";
 import {useI18n} from "vue-i18n";
 import {useRoute} from "vue-router";
@@ -167,7 +170,9 @@ onMounted(() => {
   searchModpacks()
 })
 
-watch(constants.locale, (newLocale)=>{
+let locale = inject('locale')
+
+watch(locale, (newLocale)=>{
   sortByOptions.value =
       [
         {
@@ -205,17 +210,11 @@ watch(constants.locale, (newLocale)=>{
       ]
 })
 
-let updateTimeoutId;
-
 function update() {
-  console.log(1)
   if (!updateCooldown) {
-    clearTimeout(updateTimeoutId)
-    updateTimeoutId = setTimeout(() => {
       now.value = 0
-      modpacks.value.slice(0, modpacks.value.length)
+      modpacks.value.splice(0, modpacks.value.length)
       searchModpacks()
-    }, 500)
   }
 }
 

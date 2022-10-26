@@ -1,11 +1,11 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
+import {ref} from "vue";
 
 export const useConstants = defineStore({
     id: 'constants',
     state: () => ({
         // url: 'http://localhost:8082/',
-        url: 'https://api.focess.top/',
-        locale: localStorage.getItem("locale") || "zh_CN",
+        url: 'https://api.focess.top/'
     }),
     getters: {
         apiUrl(state) {
@@ -13,11 +13,6 @@ export const useConstants = defineStore({
         },
         locale(state) {
             return state.locale;
-        }
-    },
-    actions: {
-        updateLocale(locale) {
-            this.locale = locale
         }
     }
 })
