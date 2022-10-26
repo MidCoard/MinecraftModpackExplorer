@@ -2,13 +2,15 @@
   "search": {
     "placeholder": "Search",
     "submit": "Search",
-    "error": "Network error"
+    "network-error": "Network Error",
+    "not-found-error": "No results found"
   },
   "home": {
-    "title": "Search modpacks by mod",
+    "title": "Search modpacks by mods",
     "description": "All information are provided by CurseForge API. This website is not affiliated with CurseForge or Minecraft.",
     "create-by": "Created by",
-    "remove": "Remove"
+    "remove": "Remove",
+    "search": "Search modpacks by mods above"
   }
 
 }
