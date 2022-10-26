@@ -1,19 +1,27 @@
 <script setup>
-import FLink from '@/components/FLink.vue'
-import {reactive, ref} from "vue";
+import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useConstants} from "@/stores/useConstants";
 import axios from "axios";
 
+const groupSize = 3;
+
 const {t} = useI18n()
 const constants = useConstants()
 let keyword = ref('')
-
+let loadingSearch =  ref(false)
+let showError =  ref(false)
+let mods = ref([])
 let timeoutId;
+
+let selectedMods = ref([])
+let selectedModsGroupSize = computed(()=>parseInt(selectedMods.value.length % groupSize === 0 ? selectedMods.value.length / groupSize :selectedMods.value.length /groupSize + 1) )
 
 function search() {
   if (keyword.value === '')
     return
+  loadingSearch.value = true
+  showError.value = false
   clearTimeout(timeoutId)
   timeoutId = setTimeout(() => {
     grecaptcha.ready(function () {
@@ -24,8 +32,11 @@ function search() {
           sortType: 4,
           sortBy: 1
         }).then(res => {
-          let result = res.data
-          console.log(result)
+          mods.value = res.data
+          loadingSearch.value = false
+        }).catch(() => {
+          loadingSearch.value = false
+          showError.value = true
         })
       })
     })
@@ -43,7 +54,59 @@ function search() {
         <b-input-group class="mt-3">
           <b-form-input v-model="keyword" @input="search" :placeholder="$t('search.placeholder')" />
         </b-input-group>
+        <div v-show="showError">
+          <b-alert show variant="danger" class="mt-3">
+            {{$t('search.error')}}
+          </b-alert>
+        </div>
+        <div v-show="loadingSearch && !showError">
+          <b-spinner class="mt-3 text-center" type="grow" variant="primary" />
+        </div>
+        <b-list-group v-show="!showError && !loadingSearch && mods.length !== 0 && keyword.length !== 0" style="overflow: scroll;max-height: 400px;box-shadow: black">
+          <b-list-group-item @click="selectedMods.push(mod);keyword = ''" class="mod-item" v-for="mod in mods" :key="mod.name"><b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}} <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span></b-list-group-item>
+        </b-list-group>
+      </b-col>
+    </b-row>
+    <b-row class="justify-content-center">
+      <b-col cols="12" md="6" sm="7">
+        <b-card-group deck v-for="index of selectedModsGroupSize" class="mt-3"
+                      :key="index">
+          <b-card class="single-mod" v-for="(mod,i) in selectedMods.slice((index-1) * groupSize, Math.min(index*groupSize, selectedMods.length))" :title="mod.name" title-tag="h6">
+            <svg @click="selectedMods.splice(i,1)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg single-mod-close pointer" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+            </svg>
+            <b-img height="30px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
+            <b-card-text v-show="mod.authors.length !== 0" class="text-secondary">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</b-card-text>
+          </b-card>
+        </b-card-group>
       </b-col>
     </b-row>
   </b-container>
 </template>
+
+<style scoped>
+
+.pointer {
+  cursor: pointer;
+}
+.mod-item {
+  cursor: pointer;
+}
+.mod-item:hover {
+  background: #9A68B3;
+  background: linear-gradient(to top right, #9A68B3 0%, #FF0A1B 100%);
+}
+
+.single-mod {
+  max-width: 33%;
+  max-height: 100px;
+  overflow: scroll;
+}
+
+.single-mod-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+}
+</style>

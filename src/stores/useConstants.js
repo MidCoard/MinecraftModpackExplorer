@@ -3,8 +3,8 @@ import {acceptHMRUpdate, defineStore} from 'pinia'
 export const useConstants = defineStore({
     id: 'constants',
     state: () => ({
-        // url: 'http://localexample.com:8082/',
-        url: 'https://api.focess.top/',
+        url: 'http://localhost:8082/',
+        // url: 'https://api.focess.top/',
     }),
     getters: {
         apiUrl(state) {
