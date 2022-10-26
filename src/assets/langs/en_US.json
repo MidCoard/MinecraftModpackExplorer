@@ -4,14 +4,18 @@
     "submit": "Search",
     "network-error": "Network Error",
     "not-found-error": "No results found",
-    "title": "Search Results: "
+    "title": "Search Results: ",
+    "back": "Back"
   },
   "home": {
     "title": "Search modpacks by mods",
     "description": "All information are provided by CurseForge API. This website is not affiliated with CurseForge or Minecraft.",
     "create-by": "Created by",
     "remove": "Remove",
-    "search": "Search modpacks by mods above"
+    "search": "Search modpacks by mods above",
+    "download-count": "Download Count: ",
+    "create-time": "Create Time: ",
+    "modify-time": "Update Time: "
   },
   "not-found": {
     "title": "404 Not Found"

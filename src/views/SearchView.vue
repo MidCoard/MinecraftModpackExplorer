@@ -1,8 +1,45 @@
 <template>
   <b-container fluid>
+    <b-row class="justify-content-center mt-3">
+      <b-col cols="12" sm="7">
+        <h2 style="display: inline">{{$t('search.title')}}</h2>
+        <span class="float-end">
+          <b-button href="/">{{$t('search.back')}}</b-button>
+        </span>
+      </b-col>
+    </b-row>
     <b-row class="justify-content-center">
-      <b-col cols="12" md="6" sm="7">
-        <h2>{{$t('search.title')}}</h2>
+      <b-col cols="auto">
+        <b-form-select></b-form-select>
+        <b-form-select></b-form-select>
+      </b-col>
+    </b-row>
+    <b-row v-show="!showError2" class="justify-content-center">
+      <b-col cols="12" sm="7">
+        <b-card-group v-for="index of modpacksGroupSize" class="mt-3"
+                      :key="index">
+        <b-row style="width: 100%">
+            <b-col cols="4" v-for="(mod) in modpacks.slice((index-1) * groupSize, Math.min(index*groupSize, modpacks.length))" :key="mod.name">
+              <b-card class="single-mod pointer" :title="mod.name" title-tag="h6" @click="goUrl(mod.url)">
+                <b-img height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
+                <b-card-text class="text-secondary mb-0">
+                  <p v-show="mod.authors.length !== 0" class="mb-0">
+                  {{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}
+                  </p>
+                  <p class="mb-0">
+                    {{$t('home.download-count')}} {{mod.downloadCount}}
+                  </p>
+                  <p class="mb-0">
+                    {{$t('home.create-time')}} {{new Date(mod.createTime).toLocaleString()}}
+                  </p>
+                  <p class="mb-0">
+                    {{$t('home.modify-time')}} {{new Date(mod.modifyTime).toLocaleString()}}
+                  </p>
+                </b-card-text>
+              </b-card>
+            </b-col>
+        </b-row>
+        </b-card-group>
       </b-col>
     </b-row>
     <b-row v-show="loadingSearchModpacks" class="justify-content-center">
@@ -18,23 +55,8 @@
         <hr class="my-4 invisible"/>
       </b-col>
     </b-row>
-    <b-row v-show="!showError2 && !loadingSearchModpacks" class="justify-content-center">
-      <b-col cols="12" md="6" sm="7">
-        <b-card-group v-for="index of modpacksGroupSize" class="mt-3"
-                      :key="index">
-        <b-row style="width: 100%">
-            <b-col cols="4" v-for="mod in modpacks.slice((index-1) * groupSize, Math.min(index*groupSize, modpacks.length))" :key="mod.name">
-              <b-card class="single-mod" :title="mod.name" title-tag="h6">
-                <b-img height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
-                <b-card-text v-show="mod.authors.length !== 0" class="text-secondary">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</b-card-text>
-              </b-card>
-            </b-col>
-        </b-row>
-        </b-card-group>
-      </b-col>
-    </b-row>
     <b-row v-show="showError2" class="justify-content-center">
-      <b-col cols="12" md="6" sm="7">
+      <b-col cols="12" sm="7">
         <b-alert show variant="danger" class="mt-3">
           {{errorMessage2}}
         </b-alert>
@@ -45,7 +67,7 @@
 
 <script setup>
 import axios from "axios";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import {useConstants} from "@/stores/useConstants";
 import {useI18n} from "vue-i18n";
 import {useRoute} from "vue-router";
@@ -58,6 +80,30 @@ const groupSize = 3
 
 const route = useRoute()
 
+
+let scrollValue = ref(window.scrollY);
+
+const scrollListener = () => {
+  scrollValue.value = window.scrollY;
+}
+
+onMounted(()=>{
+  window.addEventListener('scroll', scrollListener)
+})
+
+onUnmounted(()=>{
+  window.removeEventListener('scroll', scrollListener)
+})
+
+let updateCooldown = false
+
+watch(scrollValue, (value) => {
+  if (!updateCooldown && value + 1000 > document.body.scrollHeight) {
+    searchModpacks()
+  }
+})
+
+let now = ref(0)
 let errorMessage2 = ref('')
 let showError2 =  ref(false)
 let loadingSearchModpacks = ref(false)
@@ -69,6 +115,7 @@ onMounted(() => {
 })
 
 function searchModpacks() {
+  updateCooldown = true
   loadingSearchModpacks.value = true
   showError2.value = false
   grecaptcha.ready(function () {
@@ -77,29 +124,42 @@ function searchModpacks() {
         ids: JSON.parse(route.params.ids),
         recaptcha: token,
         sortType: 4,
-        sortBy: 1
+        sortBy: 1,
+        pagination: {
+          index: now.value
+        }
       }).then(res => {
         if (res.data.length === 0) {
           errorMessage2.value = t('search.not-found-error')
           showError2.value = true
         }
-        modpacks.value = res.data
+        modpacks.value.push(...res.data)
+        now.value += modpacks.value.length
         loadingSearchModpacks.value = false
+        updateCooldown = false
       }).catch(() => {
         loadingSearchModpacks.value = false
         errorMessage2.value = t('search.network-error')
         showError2.value = true
+        updateCooldown = false
       })
     })
   })
+}
+
+function goUrl(url) {
+  window.open(url)
 }
 
 </script>
 
 <style scoped>
 .single-mod {
-  max-height: 200px;
-  height: 200px;
+  max-height: 250px;
+  height: 250px;
   overflow: scroll;
+}
+.pointer {
+  cursor: pointer;
 }
 </style>
