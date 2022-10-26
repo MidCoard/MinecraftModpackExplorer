@@ -7,9 +7,12 @@
   },
   "home": {
     "title": "根据模组检索模组包",
-    "description": "所有信息来源于Curseforge API。本网站不隶属于Curseforge和Minecraft。",
+    "description": "所有信息来源于Curseforge API。本网站不隶属于Curseforge或Minecraft。",
     "create-by": "创建由",
     "remove": "移除",
     "search": "搜索包含以上模组的模组包"
+  },
+  "not-found": {
+    "title": "404 页面未找到"
   }
 }

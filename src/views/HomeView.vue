@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, watch} from "vue";
+import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useConstants} from "@/stores/useConstants";
 import axios from "axios";
@@ -10,11 +10,8 @@ const {t} = useI18n()
 const constants = useConstants()
 let keyword = ref('')
 let loadingSearch =  ref(false)
-let loadingSearchModpacks = ref(false)
 let showError =  ref(false)
 let errorMessage = ref('')
-let showError2 =  ref(false)
-let errorMessage2 = ref('')
 let mods = ref([])
 let timeoutId;
 
@@ -57,32 +54,6 @@ function search() {
   }, 500)
 }
 
-function searchModpacks() {
-  loadingSearchModpacks.value = true
-  showError2.value = false
-  grecaptcha.ready(function () {
-    grecaptcha.execute('6LdQjSYiAAAAAG9rVoUJxVajIae3snOj9J1f6iOd', {action: 'search_modpacks'}).then(function (token) {
-      axios.post(`${constants.apiUrl}v1/focessapi/minecraft/modpack/depend`,{
-        ids: selectedMods.value.map(mod => mod.id),
-        recaptcha: token,
-        sortType: 4,
-        sortBy: 1
-      }).then(res => {
-        if (res.data.length === 0 ) {
-          errorMessage2.value = t('search.not-found-error')
-          showError2.value = true
-        }
-        console.log(res.data)
-        loadingSearchModpacks.value = false
-      }).catch(() => {
-        loadingSearchModpacks.value = false
-        errorMessage2.value = t('search.network-error')
-        showError2.value = true
-      })
-    })
-  })
-}
-
 </script>
 
 <template>
@@ -103,7 +74,7 @@ function searchModpacks() {
           <b-spinner class="mt-3" type="grow" variant="secondary" style="margin: auto;" />
         </div>
         <b-list-group v-show="searchCount === 0 && !showError && !loadingSearch && mods.length !== 0 && keyword.length !== 0" style="overflow: scroll;max-height: 400px;box-shadow: black">
-          <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod);keyword = ''" class="mod-item" v-for="mod in mods" :key="mod.name"><b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}} <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span></b-list-group-item>
+          <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod);keyword = ''" class="mod-item" v-for="mod in mods.filter(m=>m.status !== 9)" :key="mod.name"><b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}} <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span></b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
@@ -123,12 +94,7 @@ function searchModpacks() {
     </b-row>
     <b-row class="justify-content-center">
       <b-col cols="auto">
-        <b-button class="mt-3" variant="secondary" size="lg" :disabled="selectedMods.length === 0 || loadingSearchModpacks" @click="searchModpacks">{{$t('home.search')}}</b-button>
-        <div v-show="showError2">
-          <b-alert show variant="danger" class="mt-3">
-            {{errorMessage2}}
-          </b-alert>
-        </div>
+        <b-button class="mt-3" variant="secondary" size="lg" :disabled="selectedMods.length === 0" @click="$router.push({name: 'search',params:{ids:JSON.stringify(selectedMods.map(m=>m.id))}})">{{$t('home.search')}}</b-button>
       </b-col>
     </b-row>
   </b-container>

@@ -11,6 +11,9 @@
     "create-by": "Created by",
     "remove": "Remove",
     "search": "Search modpacks by mods above"
+  },
+  "not-found": {
+    "title": "404 Not Found"
   }
 
 }
