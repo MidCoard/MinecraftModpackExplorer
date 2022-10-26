@@ -5,7 +5,20 @@
     "network-error": "Network Error",
     "not-found-error": "No results found",
     "title": "Search Results: ",
-    "back": "Back"
+    "back": "Back",
+    "sort-by": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "sort-type": {
+      "id": "ID",
+      "name": "Name",
+      "create-time": "Create Time",
+      "modify-time": "Update Time",
+      "download-count": "Download Count"
+    },
+    "according-to": "According to",
+    "sort": "Sort"
   },
   "home": {
     "title": "Search modpacks by mods",

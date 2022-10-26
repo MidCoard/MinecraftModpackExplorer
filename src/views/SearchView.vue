@@ -8,10 +8,22 @@
         </span>
       </b-col>
     </b-row>
-    <b-row class="justify-content-center">
+    <b-row class="justify-content-center mt-3">
       <b-col cols="auto">
-        <b-form-select></b-form-select>
-        <b-form-select></b-form-select>
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
+              {{$t('search.according-to')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-select @input="update" v-model="sortType" :options="sortTypeOptions"></b-form-select>
+          <b-form-select @input="update" v-model="sortBy" :options="sortByOptions"></b-form-select>
+          <b-input-group-append>
+            <b-input-group-text>
+              {{$t('search.sort')}}
+            </b-input-group-text>
+          </b-input-group-append>
+        </b-input-group>
       </b-col>
     </b-row>
     <b-row v-show="!showError2" class="justify-content-center">
@@ -80,6 +92,47 @@ const groupSize = 3
 
 const route = useRoute()
 
+let sortType = ref(4)
+let sortBy = ref(1)
+
+let sortByOptions = ref(
+    [
+      {
+        value: 0,
+        text: t('search.sort-by.asc')
+      },
+      {
+        value: 1,
+        text: t('search.sort-by.desc')
+      }
+    ]
+)
+
+let sortTypeOptions = ref(
+    [
+      {
+        value: 0,
+        text: t('search.sort-type.id')
+      },
+      {
+        value: 1,
+        text: t('search.sort-type.name')
+      },
+      {
+        value: 2,
+        text: t('search.sort-type.create-time')
+      },
+      {
+        value: 3,
+        text: t('search.sort-type.modify-time')
+      },
+      {
+        value: 4,
+        text: t('search.sort-type.download-count')
+      }
+    ]
+)
+
 
 let scrollValue = ref(window.scrollY);
 
@@ -114,6 +167,58 @@ onMounted(() => {
   searchModpacks()
 })
 
+watch(constants.locale, (newLocale)=>{
+  sortByOptions.value =
+      [
+        {
+          value: 0,
+          text: t('search.sort-by.asc')
+        },
+        {
+          value: 1,
+          text: t('search.sort-by.desc')
+        }
+      ]
+
+  sortTypeOptions.value =
+      [
+        {
+          value: 0,
+          text: t('search.sort-type.id')
+        },
+        {
+          value: 1,
+          text: t('search.sort-type.name')
+        },
+        {
+          value: 2,
+          text: t('search.sort-type.create-time')
+        },
+        {
+          value: 3,
+          text: t('search.sort-type.modify-time')
+        },
+        {
+          value: 4,
+          text: t('search.sort-type.download-count')
+        }
+      ]
+})
+
+let updateTimeoutId;
+
+function update() {
+  console.log(1)
+  if (!updateCooldown) {
+    clearTimeout(updateTimeoutId)
+    updateTimeoutId = setTimeout(() => {
+      now.value = 0
+      modpacks.value.slice(0, modpacks.value.length)
+      searchModpacks()
+    }, 500)
+  }
+}
+
 function searchModpacks() {
   updateCooldown = true
   loadingSearchModpacks.value = true
@@ -123,8 +228,8 @@ function searchModpacks() {
       axios.post(`${constants.apiUrl}v1/focessapi/minecraft/modpack/depend`,{
         ids: JSON.parse(route.params.ids),
         recaptcha: token,
-        sortType: 4,
-        sortBy: 1,
+        sortType: sortType.value,
+        sortBy: sortBy.value,
         pagination: {
           index: now.value
         }

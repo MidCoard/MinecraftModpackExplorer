@@ -5,7 +5,20 @@
     "network-error": "网络错误",
     "not-found-error": "未找到结果",
     "title": "搜索结果：",
-    "back": "返回"
+    "back": "返回",
+    "sort-by": {
+      "asc": "升序",
+      "desc": "降序"
+    },
+    "sort-type": {
+      "id": "ID",
+      "name": "名字",
+      "create-time": "创建时间",
+      "modify-time": "更新时间",
+      "download-count": "下载量"
+    },
+    "according-to": "根据",
+    "sort": "排序"
   },
   "home": {
     "title": "根据模组检索模组包",
