@@ -3,7 +3,8 @@
     "placeholder": "搜索",
     "submit": "搜索",
     "network-error": "网络错误",
-    "not-found-error": "未找到结果"
+    "not-found-error": "未找到结果",
+    "title": "搜索结果："
   },
   "home": {
     "title": "根据模组检索模组包",

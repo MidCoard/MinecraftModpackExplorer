@@ -3,7 +3,8 @@
     "placeholder": "Search",
     "submit": "Search",
     "network-error": "Network Error",
-    "not-found-error": "No results found"
+    "not-found-error": "No results found",
+    "title": "Search Results: "
   },
   "home": {
     "title": "Search modpacks by mods",
