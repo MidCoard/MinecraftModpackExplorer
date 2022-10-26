@@ -3,7 +3,7 @@ import FLink from '@/components/FLink.vue'
 import i18n from "@/i18n";
 import {ref, watch} from "vue";
 
-let locale = ref(i18n.global.locale.value)
+let locale = ref(localStorage.getItem('locale') || 'zh_CN')
 
 watch(locale, (newLocale) => {
   localStorage.setItem('locale', newLocale)
@@ -21,6 +21,10 @@ let locales = [
   }
 ]
 
+function goFocessAPI(){
+  window.open('https://api.focess.top')
+}
+
 </script>
 
 <template>
@@ -28,9 +32,9 @@ let locales = [
     <hr class="my-3 invisible"/>
     <b-row class="justify-content-center">
       <b-col cols="12" md="6" sm="7">
-        <b-row>
+        <b-row class="justify-content-end">
           <b-col cols="auto">
-            <b-form-select class="float-end" v-model="locale" :options="locales" />
+            <b-form-select v-model="locale" :options="locales" />
           </b-col>
         </b-row>
       </b-col>
@@ -40,7 +44,7 @@ let locales = [
       <b-col cols="12" md="6" sm="7">
         <hr/>
         <h6 style="display: inline"><f-link class="float-start" href="https://focess.top">MidCoard' Home</f-link></h6>
-        <h6 style="display: inline" class="float-end">Supported by <f-link class="api-name" href="https://api.focess.top">FocessAPI</f-link></h6>
+        <h6 style="display: inline" class="float-end">Supported by <span class="api-name pointer" @click="goFocessAPI">FocessAPI</span></h6>
       </b-col>
     </b-row>
     <hr class="my-3 invisible"/>

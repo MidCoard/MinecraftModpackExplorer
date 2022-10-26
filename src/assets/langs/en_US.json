@@ -1,1 +1,11 @@
-{}
+{
+  "search": {
+    "placeholder": "Search",
+    "submit": "Search"
+  },
+  "home": {
+    "title": "Search modpacks by mod",
+    "description": "All information are provided by CurseForge API. This website is not affiliated with CurseForge or Minecraft."
+  }
+
+}
