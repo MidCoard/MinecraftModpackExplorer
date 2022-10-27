@@ -3,7 +3,7 @@
     "placeholder": "Search",
     "submit": "Search",
     "network-error": "Network Error",
-    "not-found-error": "No results found",
+    "not-found-error": "No Results Found",
     "title": "Search Results: ",
     "back": "Back",
     "sort-by": {
@@ -37,7 +37,12 @@
     "title": "404 Not Found"
   },
   "status": {
-    "title": "Status"
+    "title": "Status",
+    "network-error": "Network Error",
+    "available-mods": "Available Mods",
+    "available-modpacks": "Dependencies Available Modpacks",
+    "not-available-modpacks": "Dependencies Not Available Modpacks",
+    "not-empty-modpacks": "Dependencies Not Empty Modpacks"
   }
 
 }

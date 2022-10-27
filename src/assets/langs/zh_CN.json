@@ -37,6 +37,11 @@
     "title": "404 页面未找到"
   },
   "status": {
-    "title": "状态"
+    "title": "状态",
+    "network-error": "网络错误",
+    "available-mods": "可用模组数量",
+    "available-modpacks": "依赖可用模组包数量",
+    "not-available-modpacks": "依赖不可用模组包数量",
+    "not-empty-modpacks": "依赖不为空的模组包数量"
   }
 }

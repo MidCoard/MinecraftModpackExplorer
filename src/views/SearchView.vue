@@ -4,7 +4,7 @@
       <b-col cols="12" sm="7">
         <h2 style="display: inline">{{$t('search.title')}}</h2>
         <span class="float-end">
-          <b-button href="/">{{$t('search.back')}}</b-button>
+          <b-button @click="$router.push({name: 'home'})">{{$t('search.back')}}</b-button>
         </span>
       </b-col>
     </b-row>
@@ -26,7 +26,7 @@
         </b-input-group>
       </b-col>
     </b-row>
-    <b-row v-show="!showError2" class="justify-content-center">
+    <b-row v-show="!showError" class="justify-content-center">
       <b-col cols="12" sm="7">
         <b-card-group v-for="index of modpacksGroupSize" class="mt-3"
                       :key="index">
@@ -76,10 +76,10 @@
         <hr class="my-4 invisible"/>
       </b-col>
     </b-row>
-    <b-row v-show="showError2" class="justify-content-center">
+    <b-row v-show="showError" class="justify-content-center">
       <b-col cols="12" sm="7">
         <b-alert show variant="danger" class="mt-3">
-          {{errorMessage2}}
+          {{errorMessage}}
         </b-alert>
       </b-col>
     </b-row>
@@ -173,8 +173,8 @@ watch(scrollValue, (value) => {
   }
 })
 
-let errorMessage2 = ref('')
-let showError2 =  ref(false)
+let errorMessage = ref('')
+let showError =  ref(false)
 let loadingSearchModpacks = ref(false)
 let modpacks = ref([])
 let modpacksGroupSize = computed(()=>parseInt(modpacks.value.length % groupSize === 0 ? modpacks.value.length / groupSize :modpacks.value.length /groupSize + 1) )
@@ -233,7 +233,7 @@ function update() {
 
 function searchModpacks() {
   loadingSearchModpacks.value = true
-  showError2.value = false
+  showError.value = false
   grecaptcha.ready(function () {
     grecaptcha.execute('6LdQjSYiAAAAAG9rVoUJxVajIae3snOj9J1f6iOd', {action: 'search_modpacks'}).then(function (token) {
       axios.post(`${constants.apiUrl}v1/focessapi/minecraft/modpack/depend`,{
@@ -249,14 +249,14 @@ function searchModpacks() {
           noModpacks.value = true
         modpacks.value.push(...res.data)
         if (modpacks.value.length === 0) {
-          errorMessage2.value = t('search.not-found-error')
-          showError2.value = true
+          errorMessage.value = t('search.not-found-error')
+          showError.value = true
         }
         loadingSearchModpacks.value = false
       }).catch(() => {
         loadingSearchModpacks.value = false
-        errorMessage2.value = t('search.network-error')
-        showError2.value = true
+        errorMessage.value = t('search.network-error')
+        showError.value = true
       })
     })
   })
