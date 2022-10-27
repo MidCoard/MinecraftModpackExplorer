@@ -82,7 +82,15 @@ function search() {
           <b-spinner class="mt-3" variant="secondary" style="margin: auto;" />
         </div>
         <b-list-group v-show="searchCount === 0 && !showError && !loadingSearch && mods.length !== 0 && keyword.length !== 0" style="overflow: scroll;max-height: 400px;box-shadow: gray 0 0 2px">
-          <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod)" class="mod-item" v-for="mod in mods.filter(m=>m.status !== 9)" :key="mod.name"><b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}} <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span></b-list-group-item>
+          <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod)" class="mod-item" v-for="mod in mods.filter(m=>m.status !== 9)" :key="mod.name">
+            <b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}}
+            <span class="text-secondary">
+              <template v-for="gameVersion in mod.latestGameVersions">
+                {{gameVersion.name}}&nbsp;
+              </template>
+            </span>
+            <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span>
+          </b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
@@ -96,7 +104,7 @@ function search() {
                 <svg @click="selectedMods.splice(i + (index-1) * groupSize,1)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg single-mod-close pointer" viewBox="0 0 16 16">
                   <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                 </svg>
-                <b-img rounded height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" @click="goUrl(mod.url)" />
+                <b-img rounded height="64px" width="auto" class="pointer" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" @click="goUrl(mod.url)" />
                 <b-card-text v-show="mod.authors.length !== 0" class="text-secondary">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</b-card-text>
               </b-card>
             </b-col>
