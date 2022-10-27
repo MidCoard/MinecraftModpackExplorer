@@ -48,7 +48,7 @@ function goFocessAPI(){
       <b-col cols="12" sm="7">
         <hr/>
         <h6 style="display: inline"><f-link class="float-start" href="https://focess.top">MidCoard' Home</f-link></h6>
-        <h6 style="display: inline" class="float-end">Supported by <span class="api-name pointer" @click="goFocessAPI">FocessAPI</span></h6>
+        <h6 style="display: inline" class="float-end">Powered by <span class="api-name pointer" @click="goFocessAPI">FocessAPI</span></h6>
       </b-col>
     </b-row>
     <hr class="my-3 invisible"/>

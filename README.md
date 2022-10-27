@@ -1,4 +1,4 @@
-# Minecraft Mod Explorer
+# Minecraft Modpack Explorer
 This is a simple web app that allows you to browse Minecraft modpacks by their dependencies.
 
 This is old version of [Minecraft Modpack Hub](https://minecraft.focess.top), and it is no longer maintained.
