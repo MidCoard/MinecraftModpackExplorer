@@ -45,7 +45,7 @@
                     </span>
                   </p>
                   <p class="mb-0">
-                    {{$t('home.mods-count')}} {{mod.dependencies.length}}
+                    {{$t('home.mods-count')}} {{mod.dependenciesSize}}
                   </p>
                   <p class="mb-0">
                     {{$t('home.download-count')}} {{mod.downloadCount}}
