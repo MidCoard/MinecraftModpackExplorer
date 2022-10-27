@@ -66,9 +66,12 @@ function search() {
 
 <template>
   <b-container fluid>
-    <b-row class="justify-content-center">
+    <b-row class="justify-content-center mt-3">
       <b-col cols="12" sm="7">
-        <h1 class="mt-3">{{$t('home.title')}}</h1>
+        <div>
+          <h1 style="display: inline">{{$t('home.title')}}</h1>
+          <b-button class="float-end" variant="secondary" @click="$router.push({name: 'status'})">{{$t('home.status')}}</b-button>
+        </div>
         <h6 class="">{{$t('home.description')}}</h6>
         <b-input-group class="mt-3">
           <b-form-input v-model="keyword" @input="search" :placeholder="$t('search.placeholder')" />

@@ -30,10 +30,14 @@
     "create-time": "Create Time: ",
     "modify-time": "Update Time: ",
     "mods-count": "Mods Count: ",
-    "latest-game-version": "Latest Game Version: "
+    "latest-game-version": "Latest Game Version: ",
+    "status": "Status"
   },
   "not-found": {
     "title": "404 Not Found"
+  },
+  "status": {
+    "title": "Status"
   }
 
 }
