@@ -4,8 +4,8 @@ import {ref} from "vue";
 export const useConstants = defineStore({
     id: 'constants',
     state: () => ({
-        url: 'http://localhost:8082/',
-        // url: 'https://api.focess.top/'
+        // url: 'http://localhost:8082/',
+        url: 'https://api.focess.top/'
     }),
     getters: {
         apiUrl(state) {

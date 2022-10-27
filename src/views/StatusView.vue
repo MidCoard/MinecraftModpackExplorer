@@ -52,6 +52,9 @@
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useConstants} from "@/stores/useConstants";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const constants = useConstants()
 
