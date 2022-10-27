@@ -29,7 +29,8 @@
     "download-count": "Download Count: ",
     "create-time": "Create Time: ",
     "modify-time": "Update Time: ",
-    "mods-count": "Mods Count: "
+    "mods-count": "Mods Count: ",
+    "latest-game-version": "Latest Game Version: "
   },
   "not-found": {
     "title": "404 Not Found"

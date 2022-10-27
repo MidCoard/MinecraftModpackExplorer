@@ -33,10 +33,16 @@
         <b-row style="width: 100%">
             <b-col cols="4" v-for="(mod) in modpacks.slice((index-1) * groupSize, Math.min(index*groupSize, modpacks.length))" :key="mod.name">
               <b-card class="single-mod pointer" :title="mod.name" title-tag="h6" @click="goUrl(mod.url)">
-                <b-img height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
+                <b-img rounded height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
                 <b-card-text class="text-secondary mb-0">
                   <p v-show="mod.authors.length !== 0" class="mb-0">
                   {{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}
+                  </p>
+                  <p class="mb-0" v-show="mod.latestGameVersions.length !== 0">
+                    {{$t('home.latest-game-version')}}
+                    <span v-for="gameVersion in mod.latestGameVersions">
+                      {{gameVersion.name}} &nbsp;
+                    </span>
                   </p>
                   <p class="mb-0">
                     {{$t('home.mods-count')}} {{mod.dependencies.length}}
@@ -151,15 +157,12 @@ onUnmounted(()=>{
   window.removeEventListener('scroll', scrollListener)
 })
 
-let updateCooldown = false
-
 watch(scrollValue, (value) => {
-  if (!updateCooldown && value + 1000 > document.body.scrollHeight) {
+  if (!loadingSearchModpacks && value + 1000 > document.body.scrollHeight) {
     searchModpacks()
   }
 })
 
-let now = ref(0)
 let errorMessage2 = ref('')
 let showError2 =  ref(false)
 let loadingSearchModpacks = ref(false)
@@ -211,15 +214,13 @@ watch(locale, (newLocale)=>{
 })
 
 function update() {
-  if (!updateCooldown) {
-      now.value = 0
+  if (!loadingSearchModpacks) {
       modpacks.value.splice(0, modpacks.value.length)
       searchModpacks()
   }
 }
 
 function searchModpacks() {
-  updateCooldown = true
   loadingSearchModpacks.value = true
   showError2.value = false
   grecaptcha.ready(function () {
@@ -230,22 +231,19 @@ function searchModpacks() {
         sortType: sortType.value,
         sortBy: sortBy.value,
         pagination: {
-          index: now.value
+          index: modpacks.value.length
         }
       }).then(res => {
-        if (res.data.length === 0) {
+        modpacks.value.push(...res.data)
+        if (modpacks.value.length === 0) {
           errorMessage2.value = t('search.not-found-error')
           showError2.value = true
         }
-        modpacks.value.push(...res.data)
-        now.value += modpacks.value.length
         loadingSearchModpacks.value = false
-        updateCooldown = false
       }).catch(() => {
         loadingSearchModpacks.value = false
         errorMessage2.value = t('search.network-error')
         showError2.value = true
-        updateCooldown = false
       })
     })
   })
