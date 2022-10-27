@@ -33,7 +33,7 @@
         <b-row style="width: 100%">
             <b-col :cols="12/groupSize" v-for="(mod) in modpacks.slice((index-1) * groupSize, Math.min(index*groupSize, modpacks.length))" :key="mod.name">
               <b-card class="single-mod pointer" :title="mod.name" title-tag="h6" @click="goUrl(mod.url)">
-                <b-img rounded height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
+                <b-img rounded height="64px" width="auto" :src="mod.logoUrl ? mod.logoUrl : `${constants.apiUrl}v1/focessapi/minecraft/mod/logo/` + mod.id"></b-img>
                 <b-card-text class="text-secondary mb-0">
                   <p v-show="mod.authors.length !== 0" class="mb-0">
                   {{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}
