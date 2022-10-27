@@ -31,7 +31,8 @@
     "modify-time": "更新时间：",
     "mods-count": "模组数量：",
     "latest-game-version": "最新游戏版本：",
-    "status": "状态"
+    "status": "状态",
+    "newui": "新版UI"
   },
   "not-found": {
     "title": "404 页面未找到"

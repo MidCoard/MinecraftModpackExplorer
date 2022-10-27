@@ -37,11 +37,10 @@ function goFocessAPI(){
     <hr class="my-3 invisible"/>
     <b-row class="justify-content-center">
       <b-col cols="12" sm="7">
-        <b-row class="justify-content-end">
-          <b-col cols="auto">
+        <b-button variant="secondary" href="/new">{{$t('home.newui')}}</b-button>
+        <span class="float-end">
             <b-form-select v-model="locale" :options="locales" />
-          </b-col>
-        </b-row>
+        </span>
       </b-col>
     </b-row>
     <router-view />

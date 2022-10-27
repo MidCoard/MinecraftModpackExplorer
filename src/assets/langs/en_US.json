@@ -31,7 +31,8 @@
     "modify-time": "Update Time: ",
     "mods-count": "Mods Count: ",
     "latest-game-version": "Latest Game Version: ",
-    "status": "Status"
+    "status": "Status",
+    "newui": "New UI"
   },
   "not-found": {
     "title": "404 Not Found"
