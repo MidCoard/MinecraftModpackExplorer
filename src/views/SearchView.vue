@@ -101,8 +101,18 @@ const groupSize = 3
 
 const route = useRoute()
 
-let sortType = ref(4)
-let sortBy = ref(1)
+let sortType = ref(localStorage.getItem('sortType') || 4)
+let sortBy = ref(localStorage.getItem('sortBy') || 1)
+
+watch(sortType, (newVal) => {
+  localStorage.setItem('sortType', newVal)
+})
+
+watch(sortBy, (newVal) => {
+  localStorage.setItem('sortBy', newVal)
+})
+
+let noModpacks = ref(false)
 
 let sortByOptions = ref(
     [
@@ -158,7 +168,7 @@ onUnmounted(()=>{
 })
 
 watch(scrollValue, (value) => {
-  if (!loadingSearchModpacks && value + 1000 > document.body.scrollHeight) {
+  if (!noModpacks.value && !loadingSearchModpacks.value && value + 1000 > document.body.scrollHeight) {
     searchModpacks()
   }
 })
@@ -214,7 +224,8 @@ watch(locale, (newLocale)=>{
 })
 
 function update() {
-  if (!loadingSearchModpacks) {
+  if (!loadingSearchModpacks.value) {
+    console.log("????")
       modpacks.value.splice(0, modpacks.value.length)
       searchModpacks()
   }
@@ -234,6 +245,8 @@ function searchModpacks() {
           index: modpacks.value.length
         }
       }).then(res => {
+        if (res.data.length < 50)
+          noModpacks.value = true
         modpacks.value.push(...res.data)
         if (modpacks.value.length === 0) {
           errorMessage2.value = t('search.not-found-error')

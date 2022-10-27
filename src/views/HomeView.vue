@@ -78,7 +78,7 @@ function search() {
           <b-spinner class="mt-3" variant="secondary" style="margin: auto;" />
         </div>
         <b-list-group v-show="searchCount === 0 && !showError && !loadingSearch && mods.length !== 0 && keyword.length !== 0" style="overflow: scroll;max-height: 400px;box-shadow: black">
-          <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod);keyword = ''" class="mod-item" v-for="mod in mods.filter(m=>m.status !== 9)" :key="mod.name"><b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}} <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span></b-list-group-item>
+          <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod)" class="mod-item" v-for="mod in mods.filter(m=>m.status !== 9)" :key="mod.name"><b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}} <span class="float-end text-secondary" v-show="mod.authors.length !== 0">{{$t('home.create-by')}} {{mod.authors.length !== 0 ? mod.authors[0].name : ''}}</span></b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
@@ -89,7 +89,7 @@ function search() {
           <b-row style="width: 100%">
             <b-col cols="4" v-for="(mod,i) in selectedMods.slice((index-1) * groupSize, Math.min(index*groupSize, selectedMods.length))" :key="mod.name">
               <b-card :title="mod.name" title-tag="h6" class="single-mod">
-                <svg @click="selectedMods.splice(i,1)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg single-mod-close pointer" viewBox="0 0 16 16">
+                <svg @click="selectedMods.splice(i + (index-1) * groupSize,1)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg single-mod-close pointer" viewBox="0 0 16 16">
                   <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                 </svg>
                 <b-img rounded height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
@@ -121,9 +121,16 @@ function search() {
 }
 
 .single-mod {
-  max-height: 150px;
-  height: 150px;
+  max-height: 175px;
+  height: 175px;
   overflow: scroll;
+  box-shadow: gray 0 0 1px;
+  transition: box-shadow 0.3s;
+}
+
+.single-mod:hover {
+  box-shadow: gray 0 0 5px;
+  transition: box-shadow 0.3s;
 }
 
 .single-mod-close {
