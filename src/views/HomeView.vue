@@ -86,7 +86,7 @@ function search() {
         </div>
         <b-list-group v-show="searchCount === 0 && !showError && !loadingSearch && mods.length !== 0 && keyword.length !== 0" style="overflow: scroll;max-height: 400px;box-shadow: gray 0 0 2px">
           <b-list-group-item v-show="!selectedMods.map(m=>m.id).includes(mod.id)" @click="selectedMods.push(mod)" class="mod-item" v-for="mod in mods" :key="mod.name">
-            <b-img :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id" height="30px" width="auto"/> {{mod.name}}
+            <b-img :src="mod.logoUrl ? mod.logoUrl : `${constants.apiUrl}v1/focessapi/minecraft/mod/logo/` + mod.id" height="30px" width="auto"/> {{mod.name}}
             <span class="text-secondary">
               <template v-for="gameVersion in mod.latestGameVersions">
                 {{gameVersion.name}}&nbsp;
