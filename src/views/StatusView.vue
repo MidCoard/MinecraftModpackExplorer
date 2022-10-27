@@ -51,6 +51,9 @@
 
 import {onMounted, ref} from "vue";
 import axios from "axios";
+import {useConstants} from "@/stores/useConstants";
+
+const constants = useConstants()
 
 let overview = ref({})
 
