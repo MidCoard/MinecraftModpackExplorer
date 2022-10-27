@@ -31,7 +31,7 @@
         <b-card-group v-for="index of modpacksGroupSize" class="mt-3"
                       :key="index">
         <b-row style="width: 100%">
-            <b-col cols="4" v-for="(mod) in modpacks.slice((index-1) * groupSize, Math.min(index*groupSize, modpacks.length))" :key="mod.name">
+            <b-col :cols="12/groupSize" v-for="(mod) in modpacks.slice((index-1) * groupSize, Math.min(index*groupSize, modpacks.length))" :key="mod.name">
               <b-card class="single-mod pointer" :title="mod.name" title-tag="h6" @click="goUrl(mod.url)">
                 <b-img rounded height="64px" width="auto" :src="`${constants.apiUrl}v1/focessapi/minecraft/mod/avatar/` + mod.id"></b-img>
                 <b-card-text class="text-secondary mb-0">
@@ -270,10 +270,18 @@ function goUrl(url) {
 
 <style scoped>
 .single-mod {
-  max-height: 250px;
-  height: 250px;
+  max-height: 275px;
+  height: 275px;
   overflow: scroll;
+  box-shadow: gray 0 0 2px;
+  transition: box-shadow 0.3s;
 }
+
+.single-mod:hover {
+  box-shadow: gray 0 0 5px;
+  transition: box-shadow 0.3s;
+}
+
 .pointer {
   cursor: pointer;
 }
