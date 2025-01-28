@@ -18,7 +18,13 @@
       "download-count": "下载量"
     },
     "according-to": "根据",
-    "sort": "排序"
+    "sort": "排序",
+    "below-download-count": "下载量低于",
+    "above-download-count": "下载量高于",
+    "before-create-time": "创建时间早于",
+    "after-create-time": "创建时间晚于",
+    "before-update-time": "更新时间早于",
+    "after-update-time": "更新时间晚于"
   },
   "home": {
     "title": "根据模组检索模组包",

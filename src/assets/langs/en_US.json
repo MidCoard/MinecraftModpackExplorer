@@ -18,7 +18,13 @@
       "download-count": "Download Count"
     },
     "according-to": "According to",
-    "sort": "Sort"
+    "sort": "Sort",
+    "below-download-count": "Below Download Count",
+    "above-download-count": "Above Download Count",
+    "before-create-time": "Before Create Time",
+    "after-create-time": "After Create Time",
+    "before-update-time": "Before Update Time",
+    "after-update-time": "After Update Time"
   },
   "home": {
     "title": "Search modpacks by mods",

@@ -13,6 +13,72 @@
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
+              {{$t('search.below-download-count')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-input @input="debouncedUpdate" v-model="belowDownloadCountDisplay" type="number" :disabled="loadingSearchModpacks"></b-form-input>
+        </b-input-group>
+      </b-col>
+      <b-col cols="auto">
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
+              {{$t('search.above-download-count')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-input @input="debouncedUpdate" v-model="aboveDownloadCountDisplay" type="number" :disabled="loadingSearchModpacks"></b-form-input>
+        </b-input-group>
+      </b-col>
+    </b-row>
+    <b-row class="justify-content-center mt-3">
+      <b-col cols="auto">
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
+              {{$t('search.before-create-time')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-input @input="debouncedUpdate" v-model="beforeCreateTime" type="date" :disabled="loadingSearchModpacks"></b-form-input>
+        </b-input-group>
+      </b-col>
+      <b-col cols="auto">
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
+              {{$t('search.after-create-time')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-input @input="debouncedUpdate" v-model="afterCreateTime" type="date" :disabled="loadingSearchModpacks"></b-form-input>
+        </b-input-group>
+      </b-col>
+    </b-row>
+    <b-row class="justify-content-center mt-3">
+      <b-col cols="auto">
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
+              {{$t('search.before-update-time')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-input @input="debouncedUpdate" v-model="beforeUpdateTime" type="date" :disabled="loadingSearchModpacks"></b-form-input>
+        </b-input-group>
+      </b-col>
+      <b-col cols="auto">
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
+              {{$t('search.after-update-time')}}
+            </b-input-group-text>
+          </b-input-group-prepend>
+          <b-form-input @input="debouncedUpdate" v-model="afterUpdateTime" type="date" :disabled="loadingSearchModpacks"></b-form-input>
+        </b-input-group>
+      </b-col>
+    </b-row>
+    <b-row class="justify-content-center mt-3">
+      <b-col cols="auto">
+        <b-input-group>
+          <b-input-group-prepend>
+            <b-input-group-text>
               {{$t('search.according-to')}}
             </b-input-group-text>
           </b-input-group-prepend>
@@ -112,6 +178,33 @@ watch(sortBy, (newVal) => {
   localStorage.setItem('sortBy', newVal)
 })
 
+let belowDownloadCount = ref(-1)
+let aboveDownloadCount = ref(-1)
+
+const belowDownloadCountDisplay = computed({
+  get() {
+    return belowDownloadCount.value === -1 ? '' : belowDownloadCount.value;
+  },
+  set(value) {
+    belowDownloadCount.value = value === '' ? -1 : Number(value);
+  }
+});
+
+const aboveDownloadCountDisplay = computed({
+  get() {
+    return aboveDownloadCount.value === -1 ? '' : aboveDownloadCount.value;
+  },
+  set(value) {
+    aboveDownloadCount.value = value === '' ? -1 : Number(value);
+  }
+});
+
+
+let beforeCreateTime = ref("")
+let afterCreateTime = ref("")
+let beforeUpdateTime = ref("")
+let afterUpdateTime = ref("")
+
 let noModpacks = ref(false)
 
 let sortByOptions = ref(
@@ -175,6 +268,7 @@ watch(scrollValue, (value) => {
 
 let errorMessage = ref('')
 let showError =  ref(false)
+let debounceTimeout = null;
 let loadingSearchModpacks = ref(false)
 let modpacks = ref([])
 let modpacksGroupSize = computed(()=>parseInt(modpacks.value.length % groupSize === 0 ? modpacks.value.length / groupSize :modpacks.value.length /groupSize + 1) )
@@ -223,9 +317,19 @@ watch(locale, (newLocale)=>{
       ]
 })
 
+
+function debouncedUpdate() {
+  if (debounceTimeout) {
+    clearTimeout(debounceTimeout);
+  }
+  debounceTimeout = setTimeout(() => {
+    update();
+  }, 1500);
+}
+
+
 function update() {
   if (!loadingSearchModpacks.value) {
-    console.log("????")
       modpacks.value.splice(0, modpacks.value.length)
       searchModpacks()
   }
@@ -236,14 +340,20 @@ function searchModpacks() {
   showError.value = false
   grecaptcha.ready(function () {
     grecaptcha.execute('6LdQjSYiAAAAAG9rVoUJxVajIae3snOj9J1f6iOd', {action: 'search_modpacks'}).then(function (token) {
-      axios.post(`${constants.apiUrl}v1/focessapi/minecraft/modpack/depend`,{
+      axios.post(`${constants.apiUrl}v1/focessapi/minecraft/modpack/depend2`,{
         ids: JSON.parse(route.params.ids),
         recaptcha: token,
         sortType: sortType.value,
         sortBy: sortBy.value,
         pagination: {
           index: modpacks.value.length
-        }
+        },
+        aboveDownloadCount: aboveDownloadCount.value,
+        belowDownloadCount: belowDownloadCount.value,
+        beforeCreateTime: beforeCreateTime.value,
+        afterCreateTime: afterCreateTime.value,
+        beforeUpdateTime: beforeUpdateTime.value,
+        afterUpdateTime: afterUpdateTime.value
       }).then(res => {
         if (res.data.length < 50)
           noModpacks.value = true
